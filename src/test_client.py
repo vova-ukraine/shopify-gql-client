@@ -27,11 +27,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-<<<<<<< HEAD
 shop_name = "embedded-adwisely.myshopify.com" 
-=======
-shop_name = "adwisely-test.myshopify.com" 
->>>>>>> 22a5c96 (Dirty commit)
 access_token = ""
 
 client = ShopifyGraphQLClient(shop_name, access_token)
