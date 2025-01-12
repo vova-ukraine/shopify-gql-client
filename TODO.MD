@@ -1,8 +1,8 @@
 ### TODO
 
 - [x] Create emuns generator
-- [ ] Create interfaces generator
-- [ ] Create unions generator
+- [x] Create interfaces generator
+- [x] Create unions generator
 - [ ] Create interface for making queries
 - [ ] Prepare simple README.MD with usaeg examples
 - [ ] Create input objects
@@ -13,3 +13,4 @@
 - [ ] Make client configurable
 - [ ] Revire error names (\*Error)
 - [ ] Tests
+- [ ] Paginators
