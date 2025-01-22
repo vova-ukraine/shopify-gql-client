@@ -1,7 +1,7 @@
 from client import ShopifyGraphQLClient
 
 from schema.queries.shop import ShopQuery, QueryRootQuery
-from schema.queries.catalogs import Catalogs
+from schema.queries.catalogs import CatalogsQuery
 from schema.objects.query_root import QueryRoot
 from schema.objects.shop import Shop
 from schema.objects.shop_address import ShopAddress
@@ -14,10 +14,13 @@ from schema.objects.app_recurring_pricing import AppRecurringPricing
 from schema.objects.money_v2 import MoneyV2
 from schema.objects.app_usage_pricing import AppUsagePricing
 from schema.interfaces.catalog import Catalog
-# from schema.objects.currency_formats import CurrencyFormats
+from schema.objects.currency_formats import CurrencyFormats
+from schema.objects.product import Product
 
 from schema.queries.app_installation import AppInstallationQuery
 from schema.objects.catalog_connection import CatalogConnection
+
+from local_credentials import SHOP_NAME, ACCESS_TOKEN
 
 from on import on
 
@@ -27,10 +30,35 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-shop_name = "embedded-adwisely.myshopify.com" 
-access_token = ""
 
-client = ShopifyGraphQLClient(shop_name, access_token)
+client = ShopifyGraphQLClient(SHOP_NAME, ACCESS_TOKEN)
+
+
+# def get_shop() -> Shop:
+#     return 1
+
+# q = client.Queries.shop(
+#     fields=[
+#         Shop.Fields.id,
+#         Shop.Fields.name,
+#         Shop.Fields.myshopify_domain,
+#     ]
+# )
+
+# shop = q.send(client)
+
+# print(shop)
+
+
+shop = client.query_shop(
+    fields=[
+        Shop.Fields.id,
+        Shop.Fields.name,
+        Shop.Fields.myshopify_domain,
+    ]
+)
+
+print(shop.__dict__)
 
 # query = ShopQuery(
 #     fields=[
@@ -42,13 +70,15 @@ client = ShopifyGraphQLClient(shop_name, access_token)
 #             ShopAddress.Fields.city,
 #             ShopAddress.Fields.address2
 #         ],
-#         # Shop.Fields.currency_code,
-#         # Shop.Fields.currency_formats[
-#         #     CurrencyFormats.Fields.money_format,
-#         #     CurrencyFormats.Fields.money_with_currency_format
-#         # ]
+#         Shop.Fields.currency_code,
+#         Shop.Fields.currency_formats[
+#             CurrencyFormats.Fields.money_format,
+#             CurrencyFormats.Fields.money_with_currency_format
+#         ]
 #     ]
 # )
+
+# print(query)
 
 # def get_shop() -> Shop:
 #     response = client.send_queries([query])
@@ -65,7 +95,8 @@ client = ShopifyGraphQLClient(shop_name, access_token)
 #     ]
 # )
 
-# print(query)
+# response = client.send_queries([query])
+# print(response)
 
 
 # query = AppInstallationQuery(fields=[
@@ -99,16 +130,30 @@ client = ShopifyGraphQLClient(shop_name, access_token)
 # app_installation = get_app_installation()
 # print(app_installation.active_subscriptions[0].line_items[0].plan.pricing_details.capped_amount.amount)
 
+# query = Catalogs(
+#     fields= [
+#         CatalogConnection.Fields.nodes[
+#             Catalog.Fields.id,
+#             Catalog.Fields.title,
+#         ],        
+#     ],
+#     args={
+#         "first": 5
+#     }
+# )
 
-query = Catalogs(first=1)[
-        CatalogConnection.Fields.nodes[
-            "id",
-            "title",
-        ],
-    ]
+# query = catalogs(first=1)[
+#         CatalogConnection.Fields.nodes[
+#             Catalog.Fields.id,
+#             Catalog.Fields.title,
+#         ],
+#     ]
 
-response = query.query(client)
-print(response.nodes[0].__dict__)
+# response = client.send_queries([query])
+# print(response[0].nodes[0].__dict__)
+
+# # response = query.query(client)
+# # print(response.nodes[0].__dict__)
 
 # def get_catalogs() -> CatalogConnection:
 #     response = client.send_queries([query])
@@ -116,3 +161,31 @@ print(response.nodes[0].__dict__)
 
 # catalogs = get_catalogs()
 # print(catalogs.__dict__)
+
+# s = QueryRoot.Fields.shop[
+#     Shop.Fields.id,
+#     Shop.Fields.name,
+#     Shop.Fields.billing_address[
+#         ShopAddress.Fields.address1,
+#         ShopAddress.Fields.city,
+#         ShopAddress.Fields.address2
+#     ],
+# ]
+
+# c = QueryRoot.Fields.company(id="gid://shopify/Company/23")[
+#             Company.Fields.id,
+#             Company.Fields.name,
+#         ]
+
+# print(c)
+
+
+# # -----
+
+# p = QueryRoot.Fields.products(first=1)[
+#     Product.Fields.id,
+#     Product.Fields.title,
+# ]
+
+
+

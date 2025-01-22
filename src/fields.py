@@ -44,7 +44,6 @@ class Field(TypeLoader):
     "fields" parameter is a tuple of fields to be nested
     """
     def __getitem__(self, fields):
-        # ??
         if not isinstance(fields, (tuple, list)):
             logger.warning(f"Fields of \"{self.name}\" should be a list, probably you forgot to use a comma (,) after a single field. The single field will converted to a list")
             fields = [fields]
@@ -61,11 +60,12 @@ class Field(TypeLoader):
         }
     "attribute_values" is a dictionary of attribute values to be populated
     """
-    def __call__(self, **attribute_values) -> None:
+    def __call__(self, **attribute_values) -> None: 
         return self.get_attribute_values_populated_instance(attribute_values)
     
     def get_field_name_query_string(self):
-        return self.name
+        arguemnts_block = self._prepare_arguments_block()
+        return f"""{self.name}{arguemnts_block}"""
     
     def get_nested_fields_query_string(self, fields):
         arguemnts_block = self._prepare_arguments_block()
@@ -120,10 +120,8 @@ class InterfaceField(Field):
     type_loader = InterfaceTypeLoader
 
     def __getitem__(self, fields: list[Field]):
-        # ??
         field_list = list(fields) if isinstance(fields, (tuple)) or not isinstance(fields, list) else fields
         field_list.append("__typename")
-        print(field_list)        
         return super().__getitem__(field_list)
 
 

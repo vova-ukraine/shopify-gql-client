@@ -5,6 +5,13 @@ from urllib.parse import urlencode
 
 from classes import Queryable
 
+from schema.queries import ShopQuery
+from fields import ObjectField
+
+
+from schema.objects.shop import Shop
+
+
 from exceptions import (
     ShopifyBadTokenException,
     ShopifyForbidden,
@@ -25,7 +32,8 @@ status_codes_errors = {
 }
 
 
-class ShopifyGraphQLClient:
+class BaseShopifyGraphQLClient:
+
 
     SHOPIFY_API_VERSION = "2024-10"
 
@@ -112,3 +120,21 @@ class ShopifyGraphQLClient:
         for query in queries:
             result.append(query.root_field.get_type_class()(data[query.root_field.name]))
         return result
+    
+    def query_shop(self, args: dict[str, any] = {}, fields: list[any] = []) -> Shop:
+        root_field = ObjectField("shop", "Shop")
+        query = str(root_field(**args)[fields])
+        json_data = self.request([query])
+        return root_field.get_type_class()(json_data[root_field.name])    
+
+class ShopifyGraphQLClient(BaseShopifyGraphQLClient):
+
+    class Queries:
+        shop = ShopQuery
+
+
+    def __init__(self, shop_name: str, access_token: str):
+        super().__init__(shop_name, access_token)
+
+
+

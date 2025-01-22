@@ -3,13 +3,15 @@ from fields import Field
 
 class Query():
     root_field = None
+    args = {}
+    fields = []
 
-    def __init__(self, args: list[Field] = [], fields: list[Field] = []) -> None:
+    def __init__(self, args: dict[str, any] = {}, fields: list[Field] = []) -> None:
         self.args = args
         self.fields = fields
 
     def __str__(self) -> str:
-        return str(self.root_field[self.fields])
+        return str(self.root_field(**self.args)[self.fields])
     
     def send(self, client):
         json_data = client.request(str(self))
