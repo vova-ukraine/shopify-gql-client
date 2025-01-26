@@ -38,9 +38,11 @@ class BaseGenerator:
         raise NotImplementedError()
     
     def _get_field_kind_and_type(self,field_type: dict):
+        listed_type = field_type["kind"] == "LIST"
         if "ofType" in field_type and field_type["ofType"] is not None:
-            return self._get_field_kind_and_type(field_type["ofType"])
-        return snake_to_camel(field_type["kind"].lower()), field_type["name"]    
+            kind, name, listed_type_inside = self._get_field_kind_and_type(field_type["ofType"])
+            return kind, name, listed_type or listed_type_inside
+        return snake_to_camel(field_type["kind"].lower()), field_type["name"], listed_type
     
     @staticmethod
     def _normalize_identifier(identifier: str):

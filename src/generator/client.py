@@ -16,7 +16,7 @@ class ClientGenerator(BaseGenerator):
         types_imports = []
         for query in queries:
             field_name = camel_to_snake(query["name"])
-            field_kind, field_type = self._get_field_kind_and_type(query['type'])
+            field_kind, field_type, listed_type = self._get_field_kind_and_type(query['type'])
             snake_field_type = self._normalize_identifier(camel_to_snake(field_type))
             normalized_field_name = self._normalize_identifier(field_name)
             # TODO: define return type

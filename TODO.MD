@@ -3,7 +3,7 @@
 - [x] Create emuns generator
 - [x] Create interfaces generator
 - [x] Create unions generator
-- [ ] Create interface for making queries
+- [x] Create interface for making queries
 - [ ] Bug: Emun value as an argument should be searalized without quotes
 - [ ] Prepare simple README.MD with usaeg examples
 - [ ] Create input objects

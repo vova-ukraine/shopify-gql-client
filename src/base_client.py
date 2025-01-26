@@ -26,7 +26,6 @@ status_codes_errors = {
 
 class BaseShopifyGraphQLClient:
 
-
     SHOPIFY_API_VERSION = "2024-10"
 
     def __init__(self, shop_name: str, access_token: str):

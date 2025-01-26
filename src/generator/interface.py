@@ -14,7 +14,7 @@ class InterfaceGenerator(ObjectGenerator):
         fields_block = ""
         for field_data in type_data["fields"]:
             field_name = self._normalize_identifier(field_data["name"])
-            field_kind, field_type = self._get_field_kind_and_type(field_data["type"])
+            field_kind, field_type, listed_type = self._get_field_kind_and_type(field_data["type"])
             field_kind = self._normalize_identifier(field_kind)
             field_type = self._normalize_identifier(field_type)
             field_arguments, argument_kinds = self._get_field_arguments(field_data["args"])
@@ -23,12 +23,12 @@ class InterfaceGenerator(ObjectGenerator):
             import_argument_kinds.update(argument_kinds)
             fields_block += f"        {field_name} = {field_kind}Field(\"{field_data['name']}\", \"{field_type}\", {arguments_block})\n"
             import_block.add(f"    from schema.{field_kind.lower()}s.{camel_to_snake(field_type)} import {field_type}\n")
-            attributes_block += f"    {field_name}: \"{field_type}\"\n"
+            attributes_block += f"    {field_name}: \"{field_type}\"\n" if not listed_type else f"    {field_name}: \"list[{field_type}]\"\n"
 
         possible_types = []
         import_type_loaders = set()
         for possible_type in type_data["possibleTypes"]:
-            possible_type_kind, possible_type_name = self._get_field_kind_and_type(possible_type)
+            possible_type_kind, possible_type_name, listed_type = self._get_field_kind_and_type(possible_type)
             possible_type_name = self._normalize_identifier(possible_type_name)
             type_loader_name = possible_type_kind.capitalize() + "TypeLoader"
             import_type_loaders.add(type_loader_name)

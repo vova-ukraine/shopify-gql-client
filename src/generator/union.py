@@ -9,7 +9,7 @@ class UnionGenerator(ObjectGenerator):
         possible_types = []
         import_type_loaders = set()
         for possible_type in type_data["possibleTypes"]:
-            possible_type_kind, possible_type_name = self._get_field_kind_and_type(possible_type)
+            possible_type_kind, possible_type_name, _ = self._get_field_kind_and_type(possible_type)
             possible_type_name = self._normalize_identifier(possible_type_name)
             type_loader_name = possible_type_kind.capitalize() + "TypeLoader"
             import_type_loaders.add(type_loader_name)

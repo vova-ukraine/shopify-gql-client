@@ -1,31 +1,19 @@
-import sys
-import re
-from abc import ABC, abstractmethod
-from typing import Generic
-import importlib
-
-from scalars.base import Base
-
-from typing import TypeVar, Generic
-
+from abc import ABC
+from typing import TypeVar
 from utils import camel_to_snake
-
-#from client import ShopifyGraphQLClient
-
+from exceptions import ValidationError
+from config import Config
 import logging
 
 logger = logging.getLogger(__name__)
 
-from utils import get_class_by_meta
-
-from exceptions import ValidationError, InvlidArgument, NotEnoughtArguments
-from utils import dynamic_import
 
 ObjectT = TypeVar('ObjectT')
 
 # TODO: Parse lists of values
 # TODO: Parse nullable
 # TODO: Warning on deprecated
+# TODO: Warning ot unpopulated fields
 class BaseType(ABC):
 
     # WORKAROUND: Currently we dont check clould the type be nullable
@@ -34,6 +22,13 @@ class BaseType(ABC):
         if value is None:
             return None
         return super().__new__(cls)
+    
+    def __getattr__(self, name):
+        if name not in self.Fields.__dict__ or not Config.unpopulated_fields_warning:
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+        logger.warning(f"Accessing unpopulated field of {self.__class__.__name__}: {name}. Returning \"None\"" )
+        return None
+        
 
 class ObjectType(BaseType):
     class Fields:
