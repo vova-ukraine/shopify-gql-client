@@ -14,5 +14,5 @@ class Query():
         return str(self.root_field(**self.args)[self.fields])
     
     def send(self, client):
-        json_data = client.request(str(self))
-        return self.root_field.type(json_data[self.root_field.name])
+        json_data = client.request([str(self)])
+        return self.root_field.get_type_class()(json_data[self.root_field.name])

@@ -1,7 +1,7 @@
 import keyword
 import logging
 
-from utils import camel_to_snake
+from utils import camel_to_snake, snake_to_camel
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +37,11 @@ class BaseGenerator:
     def _generate_class_code(self, type_data: dict):
         raise NotImplementedError()
     
+    def _get_field_kind_and_type(self,field_type: dict):
+        if "ofType" in field_type and field_type["ofType"] is not None:
+            return self._get_field_kind_and_type(field_type["ofType"])
+        return snake_to_camel(field_type["kind"].lower()), field_type["name"]    
+    
     @staticmethod
     def _normalize_identifier(identifier: str):
         snake_identifier = camel_to_snake(identifier)
@@ -45,4 +50,3 @@ class BaseGenerator:
             logger.warning(f"Identifier \"{identifier}\" is not a valid identifier. Replacing with \"_{identifier}\"")
             return f"_{identifier}"
         return identifier
-

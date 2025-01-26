@@ -16,10 +16,10 @@ from schema.objects.app_usage_pricing import AppUsagePricing
 from schema.interfaces.catalog import Catalog
 from schema.objects.currency_formats import CurrencyFormats
 from schema.objects.product import Product
-
+from schema.objects.product_connection import ProductConnection
 from schema.queries.app_installation import AppInstallationQuery
 from schema.objects.catalog_connection import CatalogConnection
-
+from schema.objects.domain import Domain
 from local_credentials import SHOP_NAME, ACCESS_TOKEN
 
 from on import on
@@ -49,6 +49,14 @@ client = ShopifyGraphQLClient(SHOP_NAME, ACCESS_TOKEN)
 
 # print(shop)
 
+domain = client.query_domain(
+    fields=[
+        Domain.Fields.id,
+        Domain.Fields.host,
+    ]
+)
+print(domain)
+
 
 shop = client.query_shop(
     fields=[
@@ -58,7 +66,38 @@ shop = client.query_shop(
     ]
 )
 
-print(shop.__dict__)
+# products = client.query_products(
+#     fields=[
+#         Product.Fields.id,
+#         Product.Fields.title,
+#     ]
+# )
+
+print(shop.name)
+
+products = client.query_products(
+    args={
+        "first": 10
+    },
+    fields=[
+        ProductConnection.Fields.nodes[
+            Product.Fields.id,
+            Product.Fields.title,
+        ],
+    ]
+)
+
+print(products.nodes[0].id)
+
+# s = client.Queries.shop(
+#     fields=[
+#         Shop.Fields.id,
+#         Shop.Fields.name,
+#         Shop.Fields.myshopify_domain,
+#     ]
+# ).send(client)
+
+# print(s.name)
 
 # query = ShopQuery(
 #     fields=[

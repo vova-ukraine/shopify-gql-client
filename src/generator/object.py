@@ -43,12 +43,7 @@ class {type_data["name"]}(ObjectType):
 {fields_block}
 {attributes_block}"""
         return class_code
-    
-    def _get_field_kind_and_type(self,field_type: dict):
-        if "ofType" in field_type and field_type["ofType"] is not None:
-            return self._get_field_kind_and_type(field_type["ofType"])
-        return snake_to_camel(field_type["kind"].lower()), field_type["name"]
-    
+
     def _get_field_arguments(self, arguments_data: list[dict]):
         arguemnt_kinds = set()
         arguments = []
