@@ -5,7 +5,9 @@ src/schema/interfaces/*
 src/schema/objects/*
 src/schema/queries/*
 src/schema/unions/*
+src/schema/scalars/*
 src/schema/client.py
+src/local_credentials.py
 
 
 # Byte-compiled / optimized / DLL files
